@@ -1,0 +1,60 @@
+<?php
+//// src/piquage/BillerBundle/Entity/Biller.php
+namespace Piquage\BillerBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="Billers")
+ */
+class Biller
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+    
+    /**
+     *
+     * @var string
+     * 
+     * @ORM\Column(type="string", length="100")
+     */
+    protected $name;
+ 
+    /**
+     *
+     * @var string
+     * 
+     * @ORM\Column(type="String", length="200")
+     */
+    protected $website;
+    
+    /**
+     *
+     * @var boolean
+     * 
+     * @ORM\Column(type="boolean")
+     */
+    protected $autoDebit;
+
+    /**
+     *
+     * @var datetime
+     * 
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+    
+    /**
+     *
+     * @var datetime
+     * 
+     * @ORM\Column(type="datetime")
+     */
+    protected $updated;
+}
+
