@@ -35,6 +35,15 @@ class BillTemplate {
 
     /**
      *
+     * @var ArrayCollection
+     * 
+     * @ORM\OneToMany(targetEntity="Bill", mappedBy="bills")
+     * 
+     */
+    protected $bills;
+
+    /**
+     *
      * @var string
      * can be set to (monthly, yearly, one-time)
      * @ORM\Column(type="string")
@@ -69,7 +78,7 @@ class BillTemplate {
      * @ORM\Column(type="boolean")
      */
     protected $active;
-    
+
     /**
      *
      * @var boolean
@@ -93,18 +102,16 @@ class BillTemplate {
      */
     protected $updated;
 
-
-
-
- 
+    public function __construct() {
+        $this->bills = new ArrayCollection();
+    }
 
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -113,8 +120,7 @@ class BillTemplate {
      *
      * @param string $recurrenceType
      */
-    public function setRecurrenceType($recurrenceType)
-    {
+    public function setRecurrenceType($recurrenceType) {
         $this->recurrenceType = $recurrenceType;
     }
 
@@ -123,8 +129,7 @@ class BillTemplate {
      *
      * @return string 
      */
-    public function getRecurrenceType()
-    {
+    public function getRecurrenceType() {
         return $this->recurrenceType;
     }
 
@@ -133,8 +138,7 @@ class BillTemplate {
      *
      * @param integer $recurrenceDay
      */
-    public function setRecurrenceDay($recurrenceDay)
-    {
+    public function setRecurrenceDay($recurrenceDay) {
         $this->recurrenceDay = $recurrenceDay;
     }
 
@@ -143,8 +147,7 @@ class BillTemplate {
      *
      * @return integer 
      */
-    public function getRecurrenceDay()
-    {
+    public function getRecurrenceDay() {
         return $this->recurrenceDay;
     }
 
@@ -153,8 +156,7 @@ class BillTemplate {
      *
      * @param integer $avgAmount
      */
-    public function setAvgAmount($avgAmount)
-    {
+    public function setAvgAmount($avgAmount) {
         $this->avgAmount = $avgAmount;
     }
 
@@ -163,8 +165,7 @@ class BillTemplate {
      *
      * @return integer 
      */
-    public function getAvgAmount()
-    {
+    public function getAvgAmount() {
         return $this->avgAmount;
     }
 
@@ -173,8 +174,7 @@ class BillTemplate {
      *
      * @param string $nickname
      */
-    public function setNickname($nickname)
-    {
+    public function setNickname($nickname) {
         $this->nickname = $nickname;
     }
 
@@ -183,8 +183,7 @@ class BillTemplate {
      *
      * @return string 
      */
-    public function getNickname()
-    {
+    public function getNickname() {
         return $this->nickname;
     }
 
@@ -193,8 +192,7 @@ class BillTemplate {
      *
      * @param boolean $active
      */
-    public function setActive($active)
-    {
+    public function setActive($active) {
         $this->active = $active;
     }
 
@@ -203,8 +201,7 @@ class BillTemplate {
      *
      * @return boolean 
      */
-    public function getActive()
-    {
+    public function getActive() {
         return $this->active;
     }
 
@@ -213,8 +210,7 @@ class BillTemplate {
      *
      * @param boolean $autoDebit
      */
-    public function setAutoDebit($autoDebit)
-    {
+    public function setAutoDebit($autoDebit) {
         $this->autoDebit = $autoDebit;
     }
 
@@ -223,8 +219,7 @@ class BillTemplate {
      *
      * @return boolean 
      */
-    public function getAutoDebit()
-    {
+    public function getAutoDebit() {
         return $this->autoDebit;
     }
 
@@ -233,8 +228,7 @@ class BillTemplate {
      *
      * @param datetime $created
      */
-    public function setCreated($created)
-    {
+    public function setCreated($created) {
         $this->created = $created;
     }
 
@@ -243,8 +237,7 @@ class BillTemplate {
      *
      * @return datetime 
      */
-    public function getCreated()
-    {
+    public function getCreated() {
         return $this->created;
     }
 
@@ -253,8 +246,7 @@ class BillTemplate {
      *
      * @param datetime $updated
      */
-    public function setUpdated($updated)
-    {
+    public function setUpdated($updated) {
         $this->updated = $updated;
     }
 
@@ -263,8 +255,7 @@ class BillTemplate {
      *
      * @return datetime 
      */
-    public function getUpdated()
-    {
+    public function getUpdated() {
         return $this->updated;
     }
 
@@ -273,8 +264,7 @@ class BillTemplate {
      *
      * @param Piquage\BillerBundle\Entity\Biller $biller
      */
-    public function setBiller(\Piquage\BillerBundle\Entity\Biller $biller)
-    {
+    public function setBiller(\Piquage\BillerBundle\Entity\Biller $biller) {
         $this->biller = $biller;
     }
 
@@ -283,8 +273,28 @@ class BillTemplate {
      *
      * @return Piquage\BillerBundle\Entity\Biller 
      */
-    public function getBiller()
-    {
+    public function getBiller() {
         return $this->biller;
+    }
+
+
+    /**
+     * Add bills
+     *
+     * @param Piquage\BillerBundle\Entity\Bill $bills
+     */
+    public function addBill(\Piquage\BillerBundle\Entity\Bill $bills)
+    {
+        $this->bills[] = $bills;
+    }
+
+    /**
+     * Get bills
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getBills()
+    {
+        return $this->bills;
     }
 }

@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Piquage\BillerBundle\Entity\Biller;
 use Piquage\BillerBundle\Entity\BillTemplate;
+use Piquage\BillerBundle\Entity\Bill;
 
 class DefaultController extends Controller {
 
@@ -61,11 +62,14 @@ class DefaultController extends Controller {
         $billTemplate->setActive(true);
 
         $em = $this->getDoctrine()->getEntityManager();
-        $em->persist($biller);
+//        $em->persist($biller);
         $em->persist($billTemplate);
         $em->flush();
 
         return new Response('Created bill template with id: '.$billTemplate->getId().' and biller with id: '.$biller->getId());
     }
 
+
+    
+    
 }

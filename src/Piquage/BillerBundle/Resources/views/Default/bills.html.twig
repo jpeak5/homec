@@ -1,0 +1,10 @@
+{% extends '::base.html.twig' %}
+{% block body %}
+<h1>success!</h1>
+<p>Created new bill for biller 
+{{biller.name}} 
+with bill ID {{bill.id}}<br/>
+Amount Due: {{bill.amount}}
+Date Due: {{bill.due|date("m/d/Y")}}
+</p>
+{%endblock%}

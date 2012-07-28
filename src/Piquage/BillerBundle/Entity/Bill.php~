@@ -1,0 +1,83 @@
+<?php
+
+namespace Piquage\BillerBundle\Entity;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="bills")
+ * 
+ */
+class Bill {
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     *
+     * @var type 
+     * 
+     * @ORM\ManyToOne(targetEntity="BillTemplate", inversedBy="bills")
+     * @ORM\JoinColumn(name="billTemplate", referencedColumnName="id")
+     */
+    protected $billTemplate;
+    
+    /**
+     *
+     * @var Float
+     * 
+     * @ORM\Column(type="decimal", scale=2)
+     * 
+     */
+    protected $amount;
+
+
+    /**
+     *
+     * @var DateTime 
+     * 
+     * @ORM\Column(type="datetime")
+     * 
+     */
+    protected $due;
+    
+    /**
+     *
+     * @var DateTime
+     * 
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $scheduled;
+    
+    /**
+     *
+     * @var DateTime
+     * When is this bill supposed to pay out
+     * 
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $paid;
+    
+    /**
+     *
+     * @var DateTime
+     * Date this bill cleared the bank
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $cleared;
+    
+    /**
+     *
+     * @var string
+     * confirmation number, if available
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $confNumber;
+    
+
+}
