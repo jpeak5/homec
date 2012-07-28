@@ -29,7 +29,7 @@ class Biller
      *
      * @var string
      * 
-     * @ORM\Column(type="String", length="200")
+     * @ORM\Column(type="string", length="200")
      */
     protected $website;
     
@@ -92,7 +92,7 @@ class Biller
      *
      * @param String $website
      */
-    public function setWebsite(\String $website)
+    public function setWebsite($website)
     {
         $this->website = $website;
     }
