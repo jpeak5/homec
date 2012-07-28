@@ -1,8 +1,9 @@
 <?php
-//// src/piquage/BillerBundle/Entity/Biller.php
+// src/piquage/BillerBundle/Entity/Biller.php
 namespace Piquage\BillerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -29,17 +30,10 @@ class Biller
      *
      * @var string
      * 
-     * @ORM\Column(type="String", length="200")
+     * @ORM\Column(type="string", length="200")
      */
     protected $website;
     
-    /**
-     *
-     * @var boolean
-     * 
-     * @ORM\Column(type="boolean")
-     */
-    protected $autoDebit;
 
     /**
      *
@@ -56,5 +50,16 @@ class Biller
      * @ORM\Column(type="datetime")
      */
     protected $updated;
-}
+    
+    /**
+     * @ORM\OneToMany(targetEntity="BillTemplate", mappedBy="biller")
+     */
+    protected $billTemplates;
 
+    
+    public function __construct(){
+        $this->billTemplates = new ArrayCollection();
+    }
+    
+  
+}

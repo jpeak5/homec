@@ -1,8 +1,9 @@
 <?php
-//// src/piquage/BillerBundle/Entity/Biller.php
+// src/piquage/BillerBundle/Entity/Biller.php
 namespace Piquage\BillerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -33,13 +34,6 @@ class Biller
      */
     protected $website;
     
-    /**
-     *
-     * @var boolean
-     * 
-     * @ORM\Column(type="boolean")
-     */
-    protected $autoDebit;
 
     /**
      *
@@ -56,6 +50,18 @@ class Biller
      * @ORM\Column(type="datetime")
      */
     protected $updated;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="BillTemplate", mappedBy="biller")
+     */
+    protected $billTemplates;
+
+    
+    public function __construct(){
+        $this->billTemplates = new ArrayCollection();
+    }
+    
+  
 
     /**
      * Get id
@@ -90,7 +96,7 @@ class Biller
     /**
      * Set website
      *
-     * @param String $website
+     * @param string $website
      */
     public function setWebsite($website)
     {
@@ -100,31 +106,11 @@ class Biller
     /**
      * Get website
      *
-     * @return String 
+     * @return string 
      */
     public function getWebsite()
     {
         return $this->website;
-    }
-
-    /**
-     * Set autoDebit
-     *
-     * @param boolean $autoDebit
-     */
-    public function setAutoDebit($autoDebit)
-    {
-        $this->autoDebit = $autoDebit;
-    }
-
-    /**
-     * Get autoDebit
-     *
-     * @return boolean 
-     */
-    public function getAutoDebit()
-    {
-        return $this->autoDebit;
     }
 
     /**
@@ -165,5 +151,25 @@ class Biller
     public function getUpdated()
     {
         return $this->updated;
+    }
+
+    /**
+     * Add billTemplates
+     *
+     * @param Piquage\BillerBundle\Entity\BillTemplate $billTemplates
+     */
+    public function addBillTemplate(\Piquage\BillerBundle\Entity\BillTemplate $billTemplates)
+    {
+        $this->billTemplates[] = $billTemplates;
+    }
+
+    /**
+     * Get billTemplates
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getBillTemplates()
+    {
+        return $this->billTemplates;
     }
 }
