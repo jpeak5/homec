@@ -16,25 +16,22 @@ class BillerController extends Controller {
 
     /**
      * @Route("/billers", name="billers_list")
-     * @return type 
+     * @return Response 
      */
     public function listAction() {
         $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:Biller");
-
         $billers = $repository->findAll();
-
         return $this->render('PiquageBillsBundle:Biller:index.html.twig', array('records' => $billers));
     }
 
     /**
      * @Route("/billers/{name}/info", name="show_biller")
      * @param type $name
-     * @return type 
+     * @return Response 
      */
     public function showAction($name) {
         $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:Biller");
         $biller = $repository->findOneByName($name);
-
         return $this->render('PiquageBillsBundle:Biller:show.html.twig', array('record' => $biller));
     }
 
@@ -42,7 +39,7 @@ class BillerController extends Controller {
      * @Route("/billers/new", name="new_biller")
      * @Route("/billers/{name}/edit", name="edit_biller")
      * @param Request $request
-     * @return type 
+     * @return Response
      */
     public function newAction(Request $request, $name = null) {
         if ($name) {
@@ -53,32 +50,6 @@ class BillerController extends Controller {
             $biller = new Biller();
             $button = 'Add';
         }
-
-        $form = $this->createForm(new BillerType(), $biller);
-
-        if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
-
-            if ($form->isValid()) {
-                $em = $this->getDoctrine()->getEntityManager();
-                
-                    $em->persist($biller);
-                
-                $em->flush();
-
-                return $this->redirect($this->generateUrl('billers_list'));
-            }
-        }
-
-        return $this->render('PiquageBillsBundle:Biller:new.html.twig', array(
-                    'form' => $form->createView(),
-                    'button' => $button,
-                ));
-    }
-
-    public function removeAction() {
-        $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:Biller");
-        $biller = $repository->findOneByName($name);
 
         $form = $this->createForm(new BillerType(), $biller);
 
@@ -98,6 +69,21 @@ class BillerController extends Controller {
                     'form' => $form->createView(),
                     'button' => $button,
                 ));
+    }
+
+    /**
+     * @Route("/billers/{name}/delete", name="delete_biller")
+     * @return Response 
+     */
+    public function removeAction($name) {
+        $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:Biller");
+        $biller = $repository->findOneByName($name);
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->remove($biller);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('billers_list'));
     }
 
 }

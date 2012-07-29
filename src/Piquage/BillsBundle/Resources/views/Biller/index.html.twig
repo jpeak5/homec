@@ -5,7 +5,9 @@
 {% if records is defined%}
     {%for record in records%}
         <p>{{record.name}} - <a href="http://{{record.website}}">{{record.website}}</a>
-<a href="{{path('edit_biller', {'name':record.name})}}">edit</a></p>
+<a href="{{path('edit_biller', {'name':record.name})}}">edit</a>
+<a href="{{path('delete_biller', {'name':record.name})}}">delete</a>
+</p>
     {%endfor%}
 {% endif %}
 
