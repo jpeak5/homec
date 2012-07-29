@@ -6,7 +6,7 @@
 
     <!--
     <parameters>
-        <parameter key="piquage_biller.example.class">Piquage\BillerBundle\Example</parameter>
+        <parameter key="piquage_biller.example.class">Piquage\BillsBundle\Example</parameter>
     </parameters>
 
     <services>

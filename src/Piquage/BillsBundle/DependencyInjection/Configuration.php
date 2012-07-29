@@ -1,6 +1,6 @@
 <?php
 
-namespace Piquage\BillerBundle\DependencyInjection;
+namespace Piquage\BillsBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

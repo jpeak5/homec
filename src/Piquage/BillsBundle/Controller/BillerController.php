@@ -1,16 +1,16 @@
 <?php
 
-namespace Piquage\BillerBundle\Controller;
+namespace Piquage\BillsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
-use Piquage\BillerBundle\Entity\BillTemplate;
-use Piquage\BillerBundle\Entity\Biller;
-use Piquage\BillerBundle\Entity\Bill;
+use Piquage\BillsBundle\Entity\BillTemplate;
+use Piquage\BillsBundle\Entity\Biller;
+use Piquage\BillsBundle\Entity\Bill;
 use Symfony\Component\HttpFoundation\Request;
-use Piquage\BillerBundle\Form\Type\BillerType;
+use Piquage\BillsBundle\Form\Type\BillerType;
 
 class BillerController extends Controller {
 
@@ -19,11 +19,11 @@ class BillerController extends Controller {
      * @return type 
      */
     public function listAction() {
-        $repository = $this->getDoctrine()->getRepository("PiquageBillerBundle:Biller");
+        $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:Biller");
 
         $billers = $repository->findAll();
 
-        return $this->render('PiquageBillerBundle:Biller:index.html.twig', array('records' => $billers));
+        return $this->render('PiquageBillsBundle:Biller:index.html.twig', array('records' => $billers));
     }
 
     /**
@@ -32,10 +32,10 @@ class BillerController extends Controller {
      * @return type 
      */
     public function showAction($name) {
-        $repository = $this->getDoctrine()->getRepository("PiquageBillerBundle:Biller");
+        $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:Biller");
         $biller = $repository->findOneByName($name);
 
-        return $this->render('PiquageBillerBundle:Biller:show.html.twig', array('record' => $biller));
+        return $this->render('PiquageBillsBundle:Biller:show.html.twig', array('record' => $biller));
     }
 
     /**
@@ -46,7 +46,7 @@ class BillerController extends Controller {
      */
     public function newAction(Request $request, $name = null) {
         if ($name) {
-            $repository = $this->getDoctrine()->getRepository("PiquageBillerBundle:Biller");
+            $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:Biller");
             $biller = $repository->findOneByName($name);
             $button = 'Update';
         } else {
@@ -70,14 +70,14 @@ class BillerController extends Controller {
             }
         }
 
-        return $this->render('PiquageBillerBundle:Biller:new.html.twig', array(
+        return $this->render('PiquageBillsBundle:Biller:new.html.twig', array(
                     'form' => $form->createView(),
                     'button' => $button,
                 ));
     }
 
     public function removeAction() {
-        $repository = $this->getDoctrine()->getRepository("PiquageBillerBundle:Biller");
+        $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:Biller");
         $biller = $repository->findOneByName($name);
 
         $form = $this->createForm(new BillerType(), $biller);
@@ -94,7 +94,7 @@ class BillerController extends Controller {
             }
         }
 
-        return $this->render('PiquageBillerBundle:Biller:new.html.twig', array(
+        return $this->render('PiquageBillsBundle:Biller:new.html.twig', array(
                     'form' => $form->createView(),
                     'button' => $button,
                 ));

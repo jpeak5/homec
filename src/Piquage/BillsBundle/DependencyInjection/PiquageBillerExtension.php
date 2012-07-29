@@ -1,6 +1,6 @@
 <?php
 
-namespace Piquage\BillerBundle\DependencyInjection;
+namespace Piquage\BillsBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;

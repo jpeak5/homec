@@ -1,6 +1,6 @@
 <?php
 
-namespace Piquage\BillerBundle\Tests\Controller;
+namespace Piquage\BillsBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

@@ -1,8 +1,8 @@
 <?php
 
-// src/piquage/BillerBundle/Entity/Biller.php
+// src/piquage/BillsBundle/Entity/Biller.php
 
-namespace Piquage\BillerBundle\Entity;
+namespace Piquage\BillsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -161,9 +161,9 @@ class Biller {
     /**
      * Add billTemplates
      *
-     * @param Piquage\BillerBundle\Entity\BillTemplate $billTemplates
+     * @param Piquage\BillsBundle\Entity\BillTemplate $billTemplates
      */
-    public function addBillTemplate(\Piquage\BillerBundle\Entity\BillTemplate $billTemplates) {
+    public function addBillTemplate(\Piquage\BillsBundle\Entity\BillTemplate $billTemplates) {
         $this->billTemplates[] = $billTemplates;
     }
 

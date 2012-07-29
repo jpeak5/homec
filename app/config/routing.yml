@@ -1,5 +1,5 @@
-PiquageBillerBundle:
-    resource: "@PiquageBillerBundle/Controller/"
+PiquageBillsBundle:
+    resource: "@PiquageBillsBundle/Controller/"
     type:     annotation
     prefix:   /
 

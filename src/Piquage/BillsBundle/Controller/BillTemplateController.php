@@ -1,14 +1,14 @@
 <?php
 
-namespace Piquage\BillerBundle\Controller;
+namespace Piquage\BillsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
-use Piquage\BillerBundle\Entity\BillTemplate;
-use Piquage\BillerBundle\Entity\Biller;
-use Piquage\BillerBundle\Entity\Bill;
+use Piquage\BillsBundle\Entity\BillTemplate;
+use Piquage\BillsBundle\Entity\Biller;
+use Piquage\BillsBundle\Entity\Bill;
 
 class BillTemplateController extends Controller {
 
@@ -18,7 +18,7 @@ class BillTemplateController extends Controller {
      * @Route("/bill/template/create")
      */
     public function createAction() {
-        $repository = $this->getDoctrine()->getRepository('PiquageBillerBundle:Biller');
+        $repository = $this->getDoctrine()->getRepository('PiquageBillsBundle:Biller');
         $biller = $repository->findOneByName('usaa');
 
 

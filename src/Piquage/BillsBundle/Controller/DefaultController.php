@@ -1,14 +1,14 @@
 <?php
 
-namespace Piquage\BillerBundle\Controller;
+namespace Piquage\BillsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
-use Piquage\BillerBundle\Entity\Biller;
-use Piquage\BillerBundle\Entity\BillTemplate;
-use Piquage\BillerBundle\Entity\Bill;
+use Piquage\BillsBundle\Entity\Biller;
+use Piquage\BillsBundle\Entity\BillTemplate;
+use Piquage\BillsBundle\Entity\Bill;
 
 
 class DefaultController extends Controller {
@@ -18,7 +18,7 @@ class DefaultController extends Controller {
      * @Template()
      */
     public function indexAction() {
-        $repository = $this->getDoctrine()->getRepository("PiquageBillerBundle:Bill");
+        $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:Bill");
 
         $bills = $repository->findAll();
         $records = array();
@@ -33,7 +33,7 @@ class DefaultController extends Controller {
             $records[] = $record;
         }
 
-        return $this->render('PiquageBillerBundle:Default:index.html.twig', array('records' => $records));
+        return $this->render('PiquageBillsBundle:Default:index.html.twig', array('records' => $records));
     }
 
     
@@ -44,10 +44,10 @@ class DefaultController extends Controller {
      * 
      */
     public function listBillTemplatesAction($biller) {
-        $repository = $this->getDoctrine()->getRepository("PiquageBillerBundle:Biller");
+        $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:Biller");
         $billTemplates = $repository->findOneByName($biller)->getBillTemplates();
 
-        return $this->render('PiquageBillerBundle:Default:index.html.twig', array('templates' => $billTemplates));
+        return $this->render('PiquageBillsBundle:Default:index.html.twig', array('templates' => $billTemplates));
     }
 
 }

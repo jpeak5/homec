@@ -1,6 +1,6 @@
 <?php
 
-namespace Piquage\BillerBundle\Form\Type;
+namespace Piquage\BillsBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
@@ -23,7 +23,7 @@ class BillerType extends AbstractType {
 
     public function getDefaultOptions(array $options) {
         return array(
-            'data_class' => 'Piquage\BillerBundle\Entity\Biller',
+            'data_class' => 'Piquage\BillsBundle\Entity\Biller',
         );
     }
 
