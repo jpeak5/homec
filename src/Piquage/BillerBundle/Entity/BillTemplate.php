@@ -16,6 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="BillTemplates")
  */
 class BillTemplate {
@@ -101,6 +102,21 @@ class BillTemplate {
      * @ORM\Column(type="datetime")
      */
     protected $updated;
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedValue() {
+        $this->created = new \DateTime();
+        $this->updated = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedValue() {
+        $this->updated = new \DateTime();
+    }
 
     public function __construct() {
         $this->bills = new ArrayCollection();
@@ -277,14 +293,12 @@ class BillTemplate {
         return $this->biller;
     }
 
-
     /**
      * Add bills
      *
      * @param Piquage\BillerBundle\Entity\Bill $bills
      */
-    public function addBill(\Piquage\BillerBundle\Entity\Bill $bills)
-    {
+    public function addBill(\Piquage\BillerBundle\Entity\Bill $bills) {
         $this->bills[] = $bills;
     }
 
@@ -293,8 +307,8 @@ class BillTemplate {
      *
      * @return Doctrine\Common\Collections\Collection 
      */
-    public function getBills()
-    {
+    public function getBills() {
         return $this->bills;
     }
+
 }

@@ -1,5 +1,7 @@
 <?php
+
 // src/piquage/BillerBundle/Entity/Biller.php
+
 namespace Piquage\BillerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -7,25 +9,26 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
+ * @ORM\HasLifeCycleCallbacks
  * @ORM\Table(name="Billers")
  */
-class Biller
-{
+class Biller {
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-    
+
     /**
      *
      * @var string
      * 
-     * @ORM\Column(type="string", length="100")
+     * @ORM\Column(type="string", length="100", unique=true)
      */
     protected $name;
- 
+
     /**
      *
      * @var string
@@ -33,7 +36,6 @@ class Biller
      * @ORM\Column(type="string", length="200")
      */
     protected $website;
-    
 
     /**
      *
@@ -42,7 +44,7 @@ class Biller
      * @ORM\Column(type="datetime")
      */
     protected $created;
-    
+
     /**
      *
      * @var datetime
@@ -50,26 +52,37 @@ class Biller
      * @ORM\Column(type="datetime")
      */
     protected $updated;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="BillTemplate", mappedBy="biller")
      */
     protected $billTemplates;
 
-    
-    public function __construct(){
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedValue() {
+        $this->created = new \DateTime();
+        $this->updated = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedValue() {
+        $this->updated = new \DateTime();
+    }
+
+    public function __construct() {
         $this->billTemplates = new ArrayCollection();
     }
-    
-  
 
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -78,8 +91,7 @@ class Biller
      *
      * @param string $name
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
     }
 
@@ -88,8 +100,7 @@ class Biller
      *
      * @return string 
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
@@ -98,8 +109,7 @@ class Biller
      *
      * @param string $website
      */
-    public function setWebsite($website)
-    {
+    public function setWebsite($website) {
         $this->website = $website;
     }
 
@@ -108,8 +118,7 @@ class Biller
      *
      * @return string 
      */
-    public function getWebsite()
-    {
+    public function getWebsite() {
         return $this->website;
     }
 
@@ -118,8 +127,7 @@ class Biller
      *
      * @param datetime $created
      */
-    public function setCreated($created)
-    {
+    public function setCreated($created) {
         $this->created = $created;
     }
 
@@ -128,8 +136,7 @@ class Biller
      *
      * @return datetime 
      */
-    public function getCreated()
-    {
+    public function getCreated() {
         return $this->created;
     }
 
@@ -138,8 +145,7 @@ class Biller
      *
      * @param datetime $updated
      */
-    public function setUpdated($updated)
-    {
+    public function setUpdated($updated) {
         $this->updated = $updated;
     }
 
@@ -148,8 +154,7 @@ class Biller
      *
      * @return datetime 
      */
-    public function getUpdated()
-    {
+    public function getUpdated() {
         return $this->updated;
     }
 
@@ -158,8 +163,7 @@ class Biller
      *
      * @param Piquage\BillerBundle\Entity\BillTemplate $billTemplates
      */
-    public function addBillTemplate(\Piquage\BillerBundle\Entity\BillTemplate $billTemplates)
-    {
+    public function addBillTemplate(\Piquage\BillerBundle\Entity\BillTemplate $billTemplates) {
         $this->billTemplates[] = $billTemplates;
     }
 
@@ -168,8 +172,8 @@ class Biller
      *
      * @return Doctrine\Common\Collections\Collection 
      */
-    public function getBillTemplates()
-    {
+    public function getBillTemplates() {
         return $this->billTemplates;
     }
+
 }

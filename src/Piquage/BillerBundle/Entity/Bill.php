@@ -1,11 +1,13 @@
 <?php
 
 namespace Piquage\BillerBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="bills")
  * 
  */
@@ -26,7 +28,7 @@ class Bill {
      * @ORM\JoinColumn(name="billTemplate", referencedColumnName="id")
      */
     protected $billTemplate;
-    
+
     /**
      *
      * @var Float
@@ -36,7 +38,6 @@ class Bill {
      */
     protected $amount;
 
-
     /**
      *
      * @var DateTime 
@@ -45,7 +46,7 @@ class Bill {
      * 
      */
     protected $due;
-    
+
     /**
      *
      * @var DateTime
@@ -53,7 +54,7 @@ class Bill {
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $scheduled;
-    
+
     /**
      *
      * @var DateTime
@@ -62,7 +63,7 @@ class Bill {
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $paid;
-    
+
     /**
      *
      * @var DateTime
@@ -70,7 +71,7 @@ class Bill {
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $cleared;
-    
+
     /**
      *
      * @var string
@@ -78,16 +79,42 @@ class Bill {
      * @ORM\Column(type="string", nullable=true)
      */
     protected $confNumber;
-    
 
+    /**
+     *
+     * @var datetime
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+
+    /**
+     *
+     * @var datetime
+     * @ORM\Column(type="datetime")
+     */
+    protected $updated;
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedValue() {
+        $this->created = new \DateTime();
+        $this->updated = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedValue() {
+        $this->updated = new \DateTime();
+    }
 
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -96,8 +123,7 @@ class Bill {
      *
      * @param decimal $amount
      */
-    public function setAmount($amount)
-    {
+    public function setAmount($amount) {
         $this->amount = $amount;
     }
 
@@ -106,8 +132,7 @@ class Bill {
      *
      * @return decimal 
      */
-    public function getAmount()
-    {
+    public function getAmount() {
         return $this->amount;
     }
 
@@ -116,8 +141,7 @@ class Bill {
      *
      * @param datetime $due
      */
-    public function setDue($due)
-    {
+    public function setDue($due) {
         $this->due = $due;
     }
 
@@ -126,8 +150,7 @@ class Bill {
      *
      * @return datetime 
      */
-    public function getDue()
-    {
+    public function getDue() {
         return $this->due;
     }
 
@@ -136,8 +159,7 @@ class Bill {
      *
      * @param datetime $scheduled
      */
-    public function setScheduled($scheduled)
-    {
+    public function setScheduled($scheduled) {
         $this->scheduled = $scheduled;
     }
 
@@ -146,8 +168,7 @@ class Bill {
      *
      * @return datetime 
      */
-    public function getScheduled()
-    {
+    public function getScheduled() {
         return $this->scheduled;
     }
 
@@ -156,8 +177,7 @@ class Bill {
      *
      * @param datetime $paid
      */
-    public function setPaid($paid)
-    {
+    public function setPaid($paid) {
         $this->paid = $paid;
     }
 
@@ -166,8 +186,7 @@ class Bill {
      *
      * @return datetime 
      */
-    public function getPaid()
-    {
+    public function getPaid() {
         return $this->paid;
     }
 
@@ -176,8 +195,7 @@ class Bill {
      *
      * @param datetime $cleared
      */
-    public function setCleared($cleared)
-    {
+    public function setCleared($cleared) {
         $this->cleared = $cleared;
     }
 
@@ -186,8 +204,7 @@ class Bill {
      *
      * @return datetime 
      */
-    public function getCleared()
-    {
+    public function getCleared() {
         return $this->cleared;
     }
 
@@ -196,8 +213,7 @@ class Bill {
      *
      * @param string $confNumber
      */
-    public function setConfNumber($confNumber)
-    {
+    public function setConfNumber($confNumber) {
         $this->confNumber = $confNumber;
     }
 
@@ -206,8 +222,7 @@ class Bill {
      *
      * @return string 
      */
-    public function getConfNumber()
-    {
+    public function getConfNumber() {
         return $this->confNumber;
     }
 
@@ -216,8 +231,7 @@ class Bill {
      *
      * @param Piquage\BillerBundle\Entity\BillTemplate $billTemplate
      */
-    public function setBillTemplate(\Piquage\BillerBundle\Entity\BillTemplate $billTemplate)
-    {
+    public function setBillTemplate(\Piquage\BillerBundle\Entity\BillTemplate $billTemplate) {
         $this->billTemplate = $billTemplate;
     }
 
@@ -226,8 +240,8 @@ class Bill {
      *
      * @return Piquage\BillerBundle\Entity\BillTemplate 
      */
-    public function getBillTemplate()
-    {
+    public function getBillTemplate() {
         return $this->billTemplate;
     }
+
 }

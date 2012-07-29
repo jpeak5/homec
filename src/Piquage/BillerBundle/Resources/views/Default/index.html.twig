@@ -1,1 +1,20 @@
 {% extends '::base.html.twig' %}
+{% block body %}
+
+{% if templates is defined%}
+<p>templates go here<br/>-------</p>
+<ul>
+{% endif %}
+{% for template in templates %}
+<li>{{template.nickname}}</li>
+{% endfor %}
+</ul>
+
+{% if records is defined%}
+{%for record in records%}
+<p>{{record.biller.name}} - {{record.billTemplate.nickname}} - {{record.bill.amount}}
+</p>
+{%endfor%}
+{% endif %}
+
+{%endblock%}
