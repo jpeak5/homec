@@ -40,35 +40,35 @@ class Bill {
 
     /**
      *
-     * @var DateTime 
+     * @var Date
      * 
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="date")
      * 
      */
     protected $due;
 
     /**
      *
-     * @var DateTime
+     * @var Date
      * 
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
     protected $scheduled;
 
     /**
      *
-     * @var DateTime
+     * @var Date
      * When is this bill supposed to pay out
      * 
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
     protected $paid;
 
     /**
      *
-     * @var DateTime
+     * @var Date
      * Date this bill cleared the bank
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
     protected $cleared;
 

@@ -19,8 +19,11 @@ class BillerController extends Controller {
      * @return Response 
      */
     public function listAction() {
-        $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:Biller");
-        $records = $repository->findAll();
+        $em = $this->getDoctrine()->getEntityManager();
+        $query = $em->createQuery('SELECT b FROM PiquageBillsBundle:Biller b ORDER BY b.name ASC');
+
+        $records = $query->getResult();
+
         return $this->render('PiquageBillsBundle:Biller:index.html.twig', array('records' => $records));
     }
 
@@ -32,7 +35,7 @@ class BillerController extends Controller {
     public function showAction($name) {
         $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:Biller");
         $record = $repository->findOneByName($name);
-        return $this->render('PiquageBillsBundle:Biller:show.html.twig', array('record' => $record));
+        return $this->render('PiquageBillsBundle:Biller:info.html.twig', array('record' => $record));
     }
 
     /**

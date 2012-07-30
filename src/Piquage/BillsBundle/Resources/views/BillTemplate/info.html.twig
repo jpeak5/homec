@@ -1,0 +1,27 @@
+{% extends '::base.html.twig' %}
+{% block body %}
+
+
+<h2>{{record.nickname}}</h2>
+<dl>    
+    <dt><a href="{{path('edit_template', {'nickname':record.nickname})}}">edit</a></dt>
+    <dt>Recurs {{record.recurrenceType}} on day {{record.recurrenceDay}}</dt>    
+    
+    {% if record.autoDebit %}
+        <dt>Auto-Debit</dt>
+    {% endif %}
+
+    {% if record.active %}
+        <dt>Active</dt>
+    {% endif %}
+    
+    <dt>ID - {{record.id}}</dt>
+    <dt>Biller - {{record.biller}}</dt>
+    <dt>Average Amount - ${{record.avgAmount}}</dt>
+    <dt>Created {{record.created|date("m/d/Y H:m")}} (updated {{record.updated|date("m/d/Y H:m")}})</dt>
+    
+    <dt><a href="{{path('delete_template', {'nickname':record.nickname})}}">delete</a></dt>
+
+</dl>
+
+{%endblock%}

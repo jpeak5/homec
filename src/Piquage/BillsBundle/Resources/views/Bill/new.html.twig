@@ -11,13 +11,24 @@
     <form action="{{ path('edit_bill', {'id': form.vars.value.id}) }}" method="post" {{ form_enctype(form) }}>
 
 {% endif %}
+
     {{ form_errors(form) }}
 
+    <div>
+        {{ form_label(form.due, 'Date Due ') }}
+        {{ form_errors(form.due) }}
+        {{ form_widget(form.due) }}
+    </div>
+    <div>
+        {{ form_label(form.amount, 'Amount Due ' ) }}
+        {{ form_errors(form.amount) }}
+        {{ form_widget(form.amount) }}
+    </div>
     
-
-    {{ form_row(form.due, { 'label': 'Due Date' }) }}
-
-    
+    {{ form_row(form.scheduled, { 'label': 'Date Scheduled ' }) }}
+    {{ form_row(form.confNumber, { 'label': 'Confirmation ## ' }) }}
+    {{ form_row(form.paid, { 'label': 'Payment scheduled to be made on ' }) }}
+    {{ form_row(form.cleared, { 'label': 'Payment cleared on ' }) }}
 
     {{ form_rest(form) }}
 

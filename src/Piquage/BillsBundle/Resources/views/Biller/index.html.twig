@@ -1,12 +1,11 @@
 {% extends '::base.html.twig' %}
 {% block body %}
-
+<a href="{{path('new_biller')}}">New biller</a>
 
 {% if records is defined%}
     {%for record in records%}
-        <p>{{record.name}} - <a href="http://{{record.website}}">{{record.website}}</a>
-<a href="{{path('edit_biller', {'name':record.name})}}">edit</a>
-<a href="{{path('delete_biller', {'name':record.name})}}">delete</a>
+<p>
+    <a href="{{path('show_biller', {'name': record.name})}}">{{record.name}}</a>
 </p>
     {%endfor%}
 {% endif %}

@@ -47,20 +47,22 @@ class BillTemplateController extends Controller {
      * @return Response 
      */
     public function listAction() {
-        $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:BillTemplate");
-        $records = $repository->findAll();
+        $em = $this->getDoctrine()->getEntityManager();
+        $query = $em->createQuery('SELECT b FROM PiquageBillsBundle:BillTemplate b ORDER BY b.nickname ASC');
+
+        $records = $query->getResult();
         return $this->render('PiquageBillsBundle:BillTemplate:index.html.twig', array('records' => $records));
     }
 
     /**
-     * @Route("/templates/{nickname}/info", name="show_templates")
+     * @Route("/templates/{nickname}/info", name="show_template")
      * @param type $nickname
      * @return Response 
      */
     public function showAction($nickname) {
         $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:BillTemplate");
         $record = $repository->findOneByNickname($nickname);
-        return $this->render('PiquageBillsBundle:BillTemplate:show.html.twig', array('record' => $record));
+        return $this->render('PiquageBillsBundle:BillTemplate:info.html.twig', array('record' => $record));
     }
 
     /**

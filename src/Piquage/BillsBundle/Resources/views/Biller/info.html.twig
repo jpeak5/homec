@@ -1,0 +1,14 @@
+{% extends '::base.html.twig' %}
+{% block body %}
+
+<h1>{{record.name}}</h1>
+<ul>
+    <li>Website - <a href="http://{{record.website}}" target="_blank">{{record.website}}</a></li>
+    <li>Created - {{record.created|date("m/d/Y h:m")}}</li>
+    <li>Last Update - {{record.updated|date("m/d/Y h:m")}}</li>
+    <li><a href="{{path('edit_biller', {'name':record.name})}}">edit</a></li>
+    <li><a href="{{path('delete_biller', {'name':record.name})}}">delete</a></li>
+
+</ul>
+
+{%endblock%}
