@@ -1,0 +1,14 @@
+{% extends '::base.html.twig' %}
+{% block body %}
+
+
+{% if records is defined%}
+    {%for record in records%}
+        <p>{{record.nickname}}
+<a href="{{path('edit_template', {'nickname':record.nickname})}}">edit</a>
+<a href="{{path('delete_template', {'nickname':record.nickname})}}">delete</a>
+</p>
+    {%endfor%}
+{% endif %}
+
+{%endblock%}

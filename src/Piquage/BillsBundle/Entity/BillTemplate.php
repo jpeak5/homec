@@ -76,7 +76,7 @@ class BillTemplate {
     /**
      *
      * @var active
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     protected $active;
 
@@ -84,7 +84,7 @@ class BillTemplate {
      *
      * @var boolean
      * If the bill is charged automatically
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      * 
      */
     protected $autoDebit;
@@ -122,6 +122,10 @@ class BillTemplate {
         $this->bills = new ArrayCollection();
     }
 
+    public function __toString(){
+        return $this->nickname;
+    }
+    
     /**
      * Get id
      *

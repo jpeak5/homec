@@ -1,0 +1,19 @@
+{% extends '::base.html.twig' %}
+{% block body %}
+
+{% if button == 'Add' %}
+
+<form action="{{ path('new_template') }}" method="post" {{ form_enctype(form) }}>
+
+{% endif %}
+{% if button == 'Update'%}
+
+    <form action="{{ path('edit_template', {'nickname': form.vars.value.nickname}) }}" method="post" {{ form_enctype(form) }}>
+
+{% endif %}
+    {{ form_widget(form) }}
+
+    <input type="submit" value="{{button}}"/>
+</form>
+
+{% endblock %}

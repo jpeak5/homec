@@ -77,6 +77,9 @@ class Biller {
         $this->billTemplates = new ArrayCollection();
     }
 
+    public function __toString(){
+        return $this->getName();
+    }
     /**
      * Get id
      *

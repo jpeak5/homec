@@ -1,0 +1,27 @@
+{% extends '::base.html.twig' %}
+{% block body %}
+
+{% if button == 'Add' %}
+
+<form action="{{ path('new_bill') }}" method="post" {{ form_enctype(form) }}>
+
+{% endif %}
+{% if button == 'Update'%}
+
+    <form action="{{ path('edit_bill', {'id': form.vars.value.id}) }}" method="post" {{ form_enctype(form) }}>
+
+{% endif %}
+    {{ form_errors(form) }}
+
+    
+
+    {{ form_row(form.due, { 'label': 'Due Date' }) }}
+
+    
+
+    {{ form_rest(form) }}
+
+    <input type="submit" value="{{button}}"/>
+</form>
+
+{% endblock %}
