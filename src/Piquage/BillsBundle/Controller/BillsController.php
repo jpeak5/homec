@@ -52,7 +52,7 @@ class BillsController extends Controller {
      */
     public function listAction() {
         $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:Bill");
-        $records = $repository->findAll();
+        $records = $repository->findAllByMonth('2012-07%');
         return $this->render('PiquageBillsBundle:Bill:index.html.twig', array('records' => $records));
     }
 

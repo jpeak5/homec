@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="bills")
- * 
+ * @ORM\Entity(repositoryClass="Piquage\BillsBundle\Repository\BillRepository")
  */
 class Bill {
 
@@ -244,4 +244,44 @@ class Bill {
         return $this->billTemplate;
     }
 
+
+    /**
+     * Set created
+     *
+     * @param datetime $created
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * Get created
+     *
+     * @return datetime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param datetime $updated
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return datetime 
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
 }

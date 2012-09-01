@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity
  * @ORM\HasLifeCycleCallbacks
- * @ORM\Table(name="Billers")
+ * @ORM\Table(name="billers")
  */
 class Biller {
 
