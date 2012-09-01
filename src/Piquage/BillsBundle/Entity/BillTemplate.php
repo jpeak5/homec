@@ -17,7 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="BillTemplates")
+ * @ORM\Table(name="billTemplates")
  */
 class BillTemplate {
 

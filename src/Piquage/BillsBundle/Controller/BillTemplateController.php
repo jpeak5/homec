@@ -1,4 +1,4 @@
-<?php
+<?php   
 
 namespace Piquage\BillsBundle\Controller;
 
@@ -55,7 +55,7 @@ class BillTemplateController extends Controller {
     }
 
     /**
-     * @Route("/templates/{nickname}/info", name="show_template")
+     * @Route("/templates/{nickname}", name="show_template")
      * @param type $nickname
      * @return Response 
      */

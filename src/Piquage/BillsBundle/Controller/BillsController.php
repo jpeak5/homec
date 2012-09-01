@@ -48,16 +48,44 @@ class BillsController extends Controller {
 
     /**
      * @Route("/", name="list_bills")
+     * @Route("/{year}", requirements={"year" = "\d{4}"}, name="list_bills_by_year")
+     * @Route("/{type}", name="list_bills_by_type")
+     * @Route("/{year}/{month}", requirements={"year"="\d{4}", "month"="\d{2}"}, name="list_bills_by_year_month")
+     * @Route("/{year}/{month}/{template}", requirements={"year"="\d{4}", "month"="\d{2}"}, name="get_bill_by_year_month_template")
      * @return Response 
      */
-    public function listAction() {
+    public function listAction(Request $request, $type=null, $year=null, $month=null, $template=null) {
         $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:Bill");
-        $records = $repository->findAllByMonth('2012-07%');
+        $args = array(
+            'type'=>$type,
+            'year'=>$year,
+            'month'=>$month,
+            'template'=>$template
+        );
+        if($args['type']){
+            $records = $repository->findAllFilterByType($type);
+            
+            }else if($args['year']){
+            $records = $repository->findAllByMonth($year.'%');
+            if($args['month']){
+                if($args['template']){
+                    $record = $repository->findByMonthTemplate($year.'-'.$month.'%', $template);
+                    return $this->render('PiquageBillsBundle:Bill:show.html.twig', array('record'=>$record[0]));
+                }else{
+                    $records = $repository->findAllByMonth($year.'-'.$month.'%');
+                }
+            }
+        }else{
+            //list all
+            $records = $repository->findAll();
+        }
+        
+        
         return $this->render('PiquageBillsBundle:Bill:index.html.twig', array('records' => $records));
     }
 
     /**
-     * @Route("/{id}/info", name="show_bill")
+     * @Route("/show/{id}", requirements={"id"="\d+"}, name="show_bill")
      * @param type $id
      * @return Response 
      */
@@ -68,8 +96,8 @@ class BillsController extends Controller {
     }
 
     /**
-     * @Route("/new", name="new_bill")
-     * @Route("/{id}/edit", name="edit_bill")
+     * @Route("/new/bill", name="new_bill")
+     * @Route("/{id}/edit", requirements={"id" = "\d+"}, name="edit_bill")
      * @param Request $request
      * @return Response
      */
@@ -82,18 +110,19 @@ class BillsController extends Controller {
             $record = new Bill();
             $button = 'Add';
         }
-
+        
         $form = $this->createForm(new BillType(), $record);
 
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
 
             if ($form->isValid()) {
+echo "form is valid<br/>";
                 $em = $this->getDoctrine()->getEntityManager();
                 $em->persist($record);
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('list_bills'));
+//                return $this->redirect($this->generateUrl('list_bills'));
             }
         }
 
@@ -118,4 +147,4 @@ class BillsController extends Controller {
         return $this->redirect($this->generateUrl('list_bills'));
     }
 
-}
+}   

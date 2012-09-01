@@ -1,6 +1,15 @@
 {% extends '::base.html.twig' %}
 {% block body %}
-    
-        <p>{{record.billTemplate}} - {{record.billTemplate.biller}}"</p>
 
+<h1>{{record.billTemplate}}</h1>
+<h2>({{record.billTemplate.biller}})</h2>   
+<h3>Bill ID {{record.id}} </h3>
+    <dl>
+        <dt>conf ## {{record.confNumber}}</dt>
+        <dt>due: {{record.due|date("m/d/Y")}}</dt>
+        <dt>scheduled {{record.scheduled|date("m/d/Y")}}</dt>
+        <dt>paid: {{record.paid|date("m/d/Y")}}</dt>
+        <dt>cleared: {{record.cleared|date("m/d/Y")}}</dt>
+    </dl>
+    
 {%endblock%}

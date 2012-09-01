@@ -16,16 +16,71 @@ class BillRepository extends EntityRepository {
 
     
     public function findAllByMonth($month){
-        $logger = new \Monolog\Logger("BillRepo");
-        $logger->debug('hello?');
+        
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->add('select','b')
                 ->add('from', 'PiquageBillsBundle:Bill b')
-                ->add('where', $qb->expr()->like('b.due', ':biller'))
-                ->add('orderBy', 'b.due DESC');
-        $qb->setParameter('biller', $month);
-        $logger->debug("hello logger");
+                ->add('where', $qb->expr()->like('b.due', ':month'))
+                ->add('orderBy', 'b.due DESC')
+                ->setParameter('month', $month);
         
+
+        return $qb->getQuery()->getResult();
+    }
+    
+    public function findAllFilterByType($type){
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        switch($type){
+            case('pending'):
+                $qb->add('select', 'b')
+                    ->add('from', 'PiquageBillsBundle:Bill b')
+                    ->add('where', $qb->expr()->isNull('b.cleared'));
+                break;
+            case('new'):
+                $qb->add('select', 'b')
+                    ->add('from', 'PiquageBillsBundle:Bill b')
+                    ->add('where', $qb->expr()->andX(
+                            $qb->expr()->isNull('b.cleared'),
+                            $qb->expr()->isNull('b.scheduled'),
+                            $qb->expr()->isNull('b.paid')
+                            )
+                        );
+                break;
+            case('paid'):
+                break;
+            case('current'):
+                $search = date('Y-M');
+                $qb->add('select','b')
+                    ->add('from', 'PiquageBillsBundle:Bill b')
+                    ->add('where', $qb->expr()->like('b.due', ':biller'))
+                    ->add('orderBy', 'b.due DESC')
+                    ->setParameter('biller', $search);
+                break;
+            default:
+                break;
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+    
+    public function findByMonthTemplate($month, $template){
+        
+        
+        
+        $tmpl = $this->getEntityManager()->getRepository('PiquageBillsBundle:BillTemplate')->findOneByNickname($template);
+        
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        
+        $qb->add('select','b')
+                ->add('from', 'PiquageBillsBundle:Bill b')
+                ->add('where', $qb->expr()->andX(
+                        $qb->expr()->eq('b.billTemplate', ':template'),
+                        $qb->expr()->like('b.due', ':month')
+                        )
+                    )
+                ->add('orderBy', 'b.due DESC')
+                ->setParameters(array('template'=> $tmpl, 'month'=>$month));
+
         return $qb->getQuery()->getResult();
     }
 }
