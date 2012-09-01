@@ -6,3 +6,4 @@
 /app/config/parameters.ini
 nbproject/private/
 db.sql
+*.php~
