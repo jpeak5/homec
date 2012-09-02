@@ -4,18 +4,15 @@ namespace Piquage\BillsBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-
 use Piquage\BillsBundle\Form\Type\BillType;
 use Piquage\BillsBundle\Entity\BillTemplate;
 use Piquage\BillsBundle\Entity\Biller;
 use Piquage\BillsBundle\Entity\Bill;
 
 class BillsController extends Controller {
-
 //    /**
 //     * @Route("/bill/create")
 //     * @return type 
@@ -54,33 +51,37 @@ class BillsController extends Controller {
      * @Route("/{year}/{month}/{template}", requirements={"year"="\d{4}", "month"="\d{2}"}, name="get_bill_by_year_month_template")
      * @return Response 
      */
-    public function listAction(Request $request, $type=null, $year=null, $month=null, $template=null) {
+    public function listAction(Request $request, $type = null, $year = null, $month = null, $template = null) {
         $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:Bill");
         $args = array(
-            'type'=>$type,
-            'year'=>$year,
-            'month'=>$month,
-            'template'=>$template
+            'type' => $type,
+            'year' => $year,
+            'month' => $month,
+            'template' => $template
         );
-        if($args['type']){
+        if ($args['type']) {
             $records = $repository->findAllFilterByType($type);
-            
-            }else if($args['year']){
-            $records = $repository->findAllByMonth($year.'%');
-            if($args['month']){
-                if($args['template']){
-                    $record = $repository->findByMonthTemplate($year.'-'.$month.'%', $template);
-                    return $this->render('PiquageBillsBundle:Bill:show.html.twig', array('record'=>$record[0]));
-                }else{
-                    $records = $repository->findAllByMonth($year.'-'.$month.'%');
+        } else if ($args['year']) {
+            $records = $repository->findAllByMonth($year . '%');
+            if ($args['month']) {
+                if ($args['template']) {
+                    $record = $repository->findByMonthTemplate($year . '-' . $month . '%', $template);
+                    return $this->render('PiquageBillsBundle:Bill:show.html.twig', array('record' => $record[0]));
+                } else {
+                    $records = $repository->findAllByMonth($year . '-' . $month . '%');
                 }
             }
-        }else{
-            //list all
-            $records = $repository->findAll();
+        } else {
+
+            $records = $repository->findAllFilterByType('current');
+            
+//            if (count($records) < count($activeBills)) {
+                $this->createMissingBills($records);
+                $records = $repository->findAllFilterByType('current');
+//            }
         }
-        
-        
+
+
         return $this->render('PiquageBillsBundle:Bill:index.html.twig', array('records' => $records));
     }
 
@@ -110,14 +111,14 @@ class BillsController extends Controller {
             $record = new Bill();
             $button = 'Add';
         }
-        
+
         $form = $this->createForm(new BillType(), $record);
 
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-echo "form is valid<br/>";
+                echo "form is valid<br/>";
                 $em = $this->getDoctrine()->getEntityManager();
                 $em->persist($record);
                 $em->flush();
@@ -147,4 +148,28 @@ echo "form is valid<br/>";
         return $this->redirect($this->generateUrl('list_bills'));
     }
 
-}   
+    private function createMissingBills($currentBill) {
+        $activeBillTemplates = $this->getDoctrine()->getRepository('PiquageBillsBundle:BillTemplate')->findByActive(1);
+        
+        foreach($activeBillTemplates as $ab){
+            $this->getDoctrine()->getRepository('PiquageBillsBundle:Bill')->insertNext($ab);
+        }
+        
+        $currentBillTemplates = array();
+
+        foreach ($currentBill as $c) {
+            $currentBillTemplates[] = $c->getBillTemplate();
+        }
+
+        $toCreate = array_diff($activeBillTemplates, $currentBillTemplates);
+
+        foreach ($toCreate as $tc) {
+//            $this->getDoctrine()->getRepository('PiquageBillsBundle:Bill')->insertNext($tc);
+        }
+    }
+
+    
+    
+
+}
+

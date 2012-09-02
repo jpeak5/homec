@@ -3,6 +3,7 @@
 namespace Piquage\BillsBundle\Repository;
 
 use Piquage\BillsBundle\Entity\Bill;
+use Piquage\BillsBundle\Entity\BillTemplate;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -13,48 +14,50 @@ use Doctrine\ORM\EntityRepository;
  */
 class BillRepository extends EntityRepository {
 
+    public $now = '2012-11-31';
 
-    
-    public function findAllByMonth($month){
-        
+    public function findAllByMonth($month) {
+
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->add('select','b')
+        $qb->add('select', 'b')
                 ->add('from', 'PiquageBillsBundle:Bill b')
                 ->add('where', $qb->expr()->like('b.due', ':month'))
                 ->add('orderBy', 'b.due DESC')
                 ->setParameter('month', $month);
-        
+
 
         return $qb->getQuery()->getResult();
     }
-    
-    public function findAllFilterByType($type){
+
+    public function findAllFilterByType($type) {
         $qb = $this->getEntityManager()->createQueryBuilder();
-        switch($type){
+        switch ($type) {
             case('pending'):
                 $qb->add('select', 'b')
-                    ->add('from', 'PiquageBillsBundle:Bill b')
-                    ->add('where', $qb->expr()->isNull('b.cleared'));
+                        ->add('from', 'PiquageBillsBundle:Bill b')
+                        ->add('where', $qb->expr()->andX(
+                                        $qb->expr()->isNull('b.cleared'), $qb->expr()->isNotNull('b.scheduled'), $qb->expr()->isNotNull('b.paid')
+                                )
+                );
                 break;
             case('new'):
                 $qb->add('select', 'b')
-                    ->add('from', 'PiquageBillsBundle:Bill b')
-                    ->add('where', $qb->expr()->andX(
-                            $qb->expr()->isNull('b.cleared'),
-                            $qb->expr()->isNull('b.scheduled'),
-                            $qb->expr()->isNull('b.paid')
-                            )
-                        );
+                        ->add('from', 'PiquageBillsBundle:Bill b')
+                        ->add('where', $qb->expr()->andX(
+                                        $qb->expr()->isNull('b.cleared'), $qb->expr()->isNull('b.scheduled'), $qb->expr()->isNull('b.paid')
+                                )
+                );
                 break;
             case('paid'):
                 break;
             case('current'):
-                $search = date('Y-M');
-                $qb->add('select','b')
-                    ->add('from', 'PiquageBillsBundle:Bill b')
-                    ->add('where', $qb->expr()->like('b.due', ':biller'))
-                    ->add('orderBy', 'b.due DESC')
-                    ->setParameter('biller', $search);
+                $search = new \DateTime($this->now);
+
+                $qb->add('select', 'b')
+                        ->add('from', 'PiquageBillsBundle:Bill b')
+                        ->add('where', $qb->expr()->like('b.due', ':due'))
+                        ->add('orderBy', 'b.due DESC')
+                        ->setParameter('due', $search->format('Y-m') . '%');
                 break;
             default:
                 break;
@@ -62,25 +65,146 @@ class BillRepository extends EntityRepository {
 
         return $qb->getQuery()->getResult();
     }
-    
-    public function findByMonthTemplate($month, $template){
-        
-        
-        
+
+    public function findByMonthTemplate($month, $template) {
+
+
+
         $tmpl = $this->getEntityManager()->getRepository('PiquageBillsBundle:BillTemplate')->findOneByNickname($template);
-        
+
         $qb = $this->getEntityManager()->createQueryBuilder();
-        
-        $qb->add('select','b')
+
+        $qb->add('select', 'b')
                 ->add('from', 'PiquageBillsBundle:Bill b')
                 ->add('where', $qb->expr()->andX(
-                        $qb->expr()->eq('b.billTemplate', ':template'),
-                        $qb->expr()->like('b.due', ':month')
+                                $qb->expr()->eq('b.billTemplate', ':template'), $qb->expr()->like('b.due', ':month')
                         )
-                    )
+                )
                 ->add('orderBy', 'b.due DESC')
-                ->setParameters(array('template'=> $tmpl, 'month'=>$month));
+                ->setParameters(array('template' => $tmpl, 'month' => $month));
 
         return $qb->getQuery()->getResult();
     }
+
+    public function getLatestBillForTemplate(BillTemplate $t) {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->add('select', 'b')
+                ->add('from', 'PiquageBillsBundle:Bill b')
+                ->add('where', $qb->expr()->eq('b.billTemplate', ':t'))
+                ->add('orderBy', 'b.due DESC')
+                ->setMaxResults(1)
+                ->setParameter('t', $t);
+
+        return $qb->getQuery()->getSingleResult();
+    }
+
+    public function insertNext(BillTemplate $bt) {
+        echo sprintf("<hr/>-------------------begin insertNext(%s)-----------------<br/>", $bt->getNickname());
+        $now = new \DateTime($this->now);
+        echo sprintf("registering time now as %s<br/>", $now->format('Y-m-d'));
+        
+        $latestBillRecord = $this->getLatestBillForTemplate($bt);        
+
+        switch ($bt->getRecurrenceType()) {
+            case('monthly'):
+
+                $untilNext = new \DateInterval('P1M');
+
+                break;
+            case('quarterly'):
+
+                $untilNext = new \DateInterval('P3M');
+
+                break;
+            case('yearly'):
+
+                $untilNext = new \DateInterval('P1Y');
+
+                break;
+            case('semesterly'):
+                break;
+            default:
+                break;
+        }
+        
+        $next = new \DateTime($latestBillRecord->getDue()->format('Y-m-d'));
+        $next->add($untilNext);
+        $diff= $latestBillRecord->getDue()->diff(($next));
+        
+        echo sprintf("diff between last due date, %s, and next due date, %s,  = %s<br/>", 
+                $latestBillRecord->getDue()->format('Y-m-d'),
+                $next->format('Y-m-d'),
+                $diff->format('%r%a'));
+        echo sprintf("diff between next due date and now = %s<br/>", $now->diff($next)->format('%r%a'));
+        
+        
+        if($now->diff($next)->format('%r%a') < $diff->format('%r%a')){
+            echo sprintf("we will create the next record...%s is less than %s<br/>",
+                    $now->diff($next)->format('%r%a'),
+                    $diff->format('%r%a')
+                    );
+            
+            $bill = new \Piquage\BillsBundle\Entity\Bill();
+            $bill->setAmount($bt->getAvgAmount());
+            $bill->setBillTemplate($bt);
+            $bill->setConfNumber(null);
+
+            $bill->setDue($next);
+
+            $bill->setPaid(null);
+            $bill->setScheduled(null);
+            $bill->setCleared(null);
+
+            $em = $this->getEntityManager();
+            $em->persist($bill);
+            $em->flush();
+            
+            echo sprintf("Created new bill record with id %d and due date %s for template %s<br/>",
+                    $bill->getID(),
+                    $bill->getDue()->format('Y-m-d'),
+                    $bill->getBillTemplate()->getNickname()
+                    );
+        }
+        
+        
+        echo sprintf("-------------------end insertNext(%s)-----------------<br/><hr/>", $bt->getNickname());
+    }
+
+    /**
+     * returns the next due date for the given BillTemplate based on the value of its reccurence type
+     * @param \Piquage\BillsBundle\Entity\BillTemplate $bt
+     * @return \DateTime 
+     */
+    private function _getNextDueDate(BillTemplate $bt) {
+
+//        echo sprintf("----------------------->>>_getNext has recieved date %s<br/>", $latest->format('Y-m-d'));
+        $latest = $this->getLatestBillForTemplate($bt)->getDue();
+        
+        switch ($bt->getRecurrenceType()) {
+            case('monthly'):
+
+                $untilNext = new \DateInterval('P1M');
+
+                break;
+            case('quarterly'):
+
+                $untilNext = new \DateInterval('P3M');
+
+                break;
+            case('yearly'):
+
+                $untilNext = new \DateInterval('P1Y');
+
+                break;
+            case('semesterly'):
+                break;
+            default:
+                break;
+        }
+        $retval = $latest->add($untilNext);
+        return $retval;
+        
+        
+    }
+
 }

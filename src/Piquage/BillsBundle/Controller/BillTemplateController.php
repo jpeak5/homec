@@ -15,41 +15,22 @@ use Piquage\BillsBundle\Entity\Biller;
 use Piquage\BillsBundle\Entity\Bill;
 
 class BillTemplateController extends Controller {
-//    /**
-//     *
-//     * @return \Symfony\Component\HttpFoundation\Response 
-//     * @Route("/bill/template/create")
-//     */
-//    public function createAction() {
-//        $repository = $this->getDoctrine()->getRepository('PiquageBillsBundle:Biller');
-//        $biller = $repository->findOneByName('usaa');
-//
-//
-//        $billTemplate = new BillTemplate();
-//        $billTemplate->setBiller($biller);
-//        $billTemplate->setAutoDebit(false);
-//        $billTemplate->setAvgAmount(80);
-//        $billTemplate->setNickname("vespa");
-//        $billTemplate->setRecurrenceType("monthly");
-//        $billTemplate->setRecurrenceDay(1);
-//        $billTemplate->setActive(true);
-//
-//        $em = $this->getDoctrine()->getEntityManager();
-////        $em->persist($biller);
-//        $em->persist($billTemplate);
-//        $em->flush();
-//
-//        return new Response('Created bill template with id: ' . $billTemplate->getId() . ' and biller with id: ' . $biller->getId());
-//    }
+
 
     /**
      * @Route("/templates", name="list_templates")
+     * @Route("/templates/{active}/billers", name="list_templates")
+     * 
      * @return Response 
      */
-    public function listAction() {
+    public function listAction($active = null) {
         $em = $this->getDoctrine()->getEntityManager();
         $query = $em->createQuery('SELECT b FROM PiquageBillsBundle:BillTemplate b ORDER BY b.nickname ASC');
-
+        if($active=='active'){
+            $query = $em->createQuery('SELECT b FROM PiquageBillsBundle:BillTemplate b WHERE b.active = 1 ORDER BY b.nickname ASC');
+        }elseif($active=='inactive'){
+            $query = $em->createQuery('SELECT b FROM PiquageBillsBundle:BillTemplate b WHERE b.active = 0 ORDER BY b.nickname ASC');
+        }
         $records = $query->getResult();
         return $this->render('PiquageBillsBundle:BillTemplate:index.html.twig', array('records' => $records));
     }
