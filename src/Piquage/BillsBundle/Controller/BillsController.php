@@ -73,12 +73,13 @@ class BillsController extends Controller {
             }
         } else {
 
+            $activeBills = $this->getDoctrine()->getRepository('PiquageBillsBundle:BillTemplate')->findByActive(1);
             $records = $repository->findAllFilterByType('current');
             
-//            if (count($records) < count($activeBills)) {
+            if (count($records) < count($activeBills)) {
                 $this->createMissingBills($records);
                 $records = $repository->findAllFilterByType('current');
-//            }
+            }
         }
 
 
@@ -148,24 +149,24 @@ class BillsController extends Controller {
         return $this->redirect($this->generateUrl('list_bills'));
     }
 
-    private function createMissingBills($currentBill) {
+    private function createMissingBills() {
         $activeBillTemplates = $this->getDoctrine()->getRepository('PiquageBillsBundle:BillTemplate')->findByActive(1);
         
         foreach($activeBillTemplates as $ab){
             $this->getDoctrine()->getRepository('PiquageBillsBundle:Bill')->insertNext($ab);
         }
         
-        $currentBillTemplates = array();
-
-        foreach ($currentBill as $c) {
-            $currentBillTemplates[] = $c->getBillTemplate();
-        }
-
-        $toCreate = array_diff($activeBillTemplates, $currentBillTemplates);
-
-        foreach ($toCreate as $tc) {
+//        $currentBillTemplates = array();
+//
+//        foreach ($currentBill as $c) {
+//            $currentBillTemplates[] = $c->getBillTemplate();
+//        }
+//
+//        $toCreate = array_diff($activeBillTemplates, $currentBillTemplates);
+//
+//        foreach ($toCreate as $tc) {
 //            $this->getDoctrine()->getRepository('PiquageBillsBundle:Bill')->insertNext($tc);
-        }
+//        }
     }
 
     

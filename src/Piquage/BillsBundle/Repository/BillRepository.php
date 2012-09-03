@@ -14,7 +14,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class BillRepository extends EntityRepository {
 
-    public $now = '2012-11-31';
+    
 
     public function findAllByMonth($month) {
 
@@ -51,7 +51,7 @@ class BillRepository extends EntityRepository {
             case('paid'):
                 break;
             case('current'):
-                $search = new \DateTime($this->now);
+                $search = new \DateTime();
 
                 $qb->add('select', 'b')
                         ->add('from', 'PiquageBillsBundle:Bill b')
@@ -99,9 +99,10 @@ class BillRepository extends EntityRepository {
     }
 
     public function insertNext(BillTemplate $bt) {
-        echo sprintf("<hr/>-------------------begin insertNext(%s)-----------------<br/>", $bt->getNickname());
-        $now = new \DateTime($this->now);
-        echo sprintf("registering time now as %s<br/>", $now->format('Y-m-d'));
+        $debug = "###############################:Begin Debug echoes:###############################<br/>";
+        $debug.=sprintf("<hr/>-------------------begin insertNext(%s)-----------------<br/>", $bt->getNickname());
+        $now = new \DateTime();
+        $debug.=sprintf("registering time now as %s<br/>", $now->format('Y-m-d'));
         
         $latestBillRecord = $this->getLatestBillForTemplate($bt);        
 
@@ -131,15 +132,16 @@ class BillRepository extends EntityRepository {
         $next->add($untilNext);
         $diff= $latestBillRecord->getDue()->diff(($next));
         
-        echo sprintf("diff between last due date, %s, and next due date, %s,  = %s<br/>", 
+        $debug.=sprintf("diff between last due date, %s, and next due date, %s,  = %s<br/>", 
                 $latestBillRecord->getDue()->format('Y-m-d'),
                 $next->format('Y-m-d'),
                 $diff->format('%r%a'));
-        echo sprintf("diff between next due date and now = %s<br/>", $now->diff($next)->format('%r%a'));
+        $debug.=sprintf("diff between next due date and now = %s<br/>", $now->diff($next)->format('%r%a'));
         
+        $flash="";
         
         if($now->diff($next)->format('%r%a') < $diff->format('%r%a')){
-            echo sprintf("we will create the next record...%s is less than %s<br/>",
+            $debug.= sprintf("we will create the next record...%s is less than %s<br/>",
                     $now->diff($next)->format('%r%a'),
                     $diff->format('%r%a')
                     );
@@ -159,15 +161,19 @@ class BillRepository extends EntityRepository {
             $em->persist($bill);
             $em->flush();
             
-            echo sprintf("Created new bill record with id %d and due date %s for template %s<br/>",
+            $flash =sprintf("Created new bill record with id %d and due date %s for template %s<br/>",
                     $bill->getID(),
                     $bill->getDue()->format('Y-m-d'),
                     $bill->getBillTemplate()->getNickname()
                     );
+            
         }
         
         
-        echo sprintf("-------------------end insertNext(%s)-----------------<br/><hr/>", $bt->getNickname());
+        $debug.=sprintf("-------------------end insertNext(%s)-----------------<br/><hr/>", $bt->getNickname());
+        $debug.="###############################:END Debug:###############################<br/><br/><br/>";
+//        echo $flash."<br/>".$debug;
+        echo $flash;
     }
 
     /**
