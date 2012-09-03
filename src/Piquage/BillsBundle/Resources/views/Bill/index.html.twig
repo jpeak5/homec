@@ -1,12 +1,17 @@
 {% extends '::base.html.twig' %}
+
+
 {% block body %}
+{% javascripts %}
+
+{% endjavascripts %}
 
 
 {% if records is defined%}
     {%for record in records%}
-        <p>{{record.id}}, {{record.billTemplate}}, due on {{record.due|date("m/d/Y")}}
-<a href="{{path('edit_bill', {'id':record.id})}}">edit</a>
-<a href="{{path('delete_bill', {'id':record.id})}}">delete</a>
+<p>{{record.id}}, {{record.billTemplate}}, due on {{record.due|date("m/d/Y")}}
+    <a href="{{path('edit_bill', {'id':record.id})}}">edit</a>
+    <a href="{{path('delete_bill', {'id':record.id})}}">delete</a>
 </p>
     {%endfor%}
 {% endif %}

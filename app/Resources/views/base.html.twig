@@ -8,6 +8,19 @@
     </head>
     <body>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% javascripts %}
+            
+        {% endjavascripts %}
+                <script src="/js/dojo/dojo.js" data-dojo-config="async: true, baseURL: /js/"></script>
+                
+                  <script>
+                      require(["dgrid/Grid", "dojo/domReady!"], function(Grid){
+                          var grid = new Grid({ /* options here */ }, "grid");
+                          
+                      });
+                  </script>
+                  
+                  
+                  <div id="grid"></div>
     </body>
 </html>
