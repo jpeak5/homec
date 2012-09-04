@@ -79,13 +79,47 @@ class BillsController extends Controller {
             if (count($records) < count($activeBills)) {
                 $this->createMissingBills($records);
                 $records = $repository->findAllFilterByType('current');
+                
             }
+            $json = array();
+            foreach($records as $r){
+                $json[] = array('id' => $r->getID(),
+                    'name' => $r->getBillTemplate()->getNickname(),
+                    'due' => $r->getDue()->format('Y-m-d')
+                        );
+            }
+            
         }
 
 
         return $this->render('PiquageBillsBundle:Bill:index.html.twig', array('records' => $records));
     }
 
+    /**
+     * @Route("/grid/current", name="json_list_bills")
+     * @return type
+     */
+    public function gridRequestAction() {
+        
+        $records = $this->getDoctrine()->getRepository('PiquageBillsBundle:Bill')->findAllFilterByType('current');
+        
+        $json = array();
+        foreach ($records as $r) {
+            $json[] = array('id' => $r->getID(),
+                'name' => $r->getBillTemplate()->getNickname(),
+                'due' => $r->getDue()->format('Y-m-d')
+            );
+        }
+          $headers = array(
+        'Content-Type' => 'application/json'
+  );
+
+  $response = new Response(json_encode($json), 200, $headers);
+  return $response;
+
+//        echo json_encode($json);
+    }
+    
     /**
      * @Route("/show/{id}", requirements={"id"="\d+"}, name="show_bill")
      * @param type $id

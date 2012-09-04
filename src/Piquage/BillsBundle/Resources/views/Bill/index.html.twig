@@ -15,5 +15,23 @@
 </p>
     {%endfor%}
 {% endif %}
+                <script src="/js/dojo/dojo.js" data-dojo-config="async: true, baseURL: /js/"></script>
+                
+                <script>
+                    require(["dgrid/Grid", "dojo/store/JsonRest" , "dojo/domReady!"], function(Grid,JsonRest){
+                        var grid = new Grid({ /* options here */ }, "grid");
+                        var store = new JsonRest({
+                        target: "/bills/grid/current/"
+                      });
 
+                      // Get an object by identity
+                      store.get(221).then(function(item){
+                        // item will be the DB item
+                      });    
+                    });
+                      
+                    </script>
+                  
+                  
+                  <div id="grid"></div>
 {%endblock%}
