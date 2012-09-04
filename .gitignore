@@ -7,3 +7,4 @@
 nbproject/private/
 *.sql
 *.php~
+/web/js
