@@ -91,7 +91,8 @@ class BillsController extends Controller {
             
         }
 
-
+        
+        
         return $this->render('PiquageBillsBundle:Bill:index.html.twig', array('records' => $records));
     }
 

@@ -25,7 +25,7 @@ class Biller {
      *
      * @var string
      * 
-     * @ORM\Column(type="string", length="100", unique=true)
+     * @ORM\Column(type="string", length=100, unique=true)
      */
     protected $name;
 
@@ -33,7 +33,7 @@ class Biller {
      *
      * @var string
      * 
-     * @ORM\Column(type="string", length="200", nullable=true)
+     * @ORM\Column(type="string", length=200, nullable=true)
      */
     protected $website;
 
