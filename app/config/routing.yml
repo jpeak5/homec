@@ -1,11 +1,15 @@
 PiquageBillsBundle:
     resource: "@PiquageBillsBundle/Controller/"
     type:     annotation
-    prefix:   /api/bills
+    prefix:   /bills
 
-bills:
-    type:     rest
-    resource: Piquage\BillsBundle\Controller\BillsRestController
+#bills:
+#    type:     rest
+#    resource: Piquage\BillsBundle\Controller\BillsRestController
+#    prefix:   /api
+
+
+
 # Internal routing configuration to handle ESI
 #_internal:
 #   resource: "@FrameworkBundle/Resources/config/routing/internal.xml"

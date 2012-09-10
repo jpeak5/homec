@@ -7,28 +7,37 @@
 {% endjavascripts %}
 
 
-{% if records is defined%}
-    {%for record in records%}
-<p>{{record.id}}, {{record.billTemplate}}, due on {{record.due|date("m/d/Y")}}
-    <a href="{{path('edit_bill', {'id':record.id})}}">edit</a>
-    <a href="{{path('delete_bill', {'id':record.id})}}">delete</a>
-</p>
-    {%endfor%}
-{% endif %}
+
                 <script src="/js/dojo/dojo.js" data-dojo-config="async: true, baseURL: /js/"></script>
                 
                 <script>
-                    require(["dgrid/Grid", "dojo/store/JsonRest" , "dojo/domReady!"], function(Grid,JsonRest){
-                        var grid = new Grid({ /* options here */ }, "grid");
-                        var store = new JsonRest({
-                        target: "/bills/grid/current/"
-                      });
+                require(["dgrid/Grid", "dojo/store/JsonRest", "dojo/request", "dojo/json", "dojo/domReady!"], 
+                    function(Grid,JsonRest,request, json){
+                        var grid = new Grid({
+                            columns: {
+                                id:         "ID",
+                                name:       "Name",
+                                amount:     "Amount",    
+                                conf:       "Conf #",
+                                due:        "Due",
+                                scheduled:  "Scheduled",
+                                paid:       "Paid",
+                                cleared:    "Cleared",
+                                created:    "Created",
+                                updated:    "Updated"
+                            }
+                        }, "grid");
 
-                      // Get an object by identity
-                      store.get(221).then(function(item){
-                        // item will be the DB item
-                      });    
+
+                        request.get("/app_dev.php/bills/grid/current",{
+                            handleAs: 'json'
+                        }).then(
+                                function(data){
+                                    grid.renderArray(data);
+                                }
+                            )
                     });
+
                       
                     </script>
                   

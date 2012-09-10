@@ -13,35 +13,6 @@ use Piquage\BillsBundle\Entity\Biller;
 use Piquage\BillsBundle\Entity\Bill;
 
 class BillsController extends Controller {
-//    /**
-//     * @Route("/bill/create")
-//     * @return type 
-//     */
-//    public function createAction() {
-//        $repository = $this->getDoctrine()->getRepository("PiquageBillsBundle:BillTemplate");
-//
-//        $billTemplate = $repository->findOneByNickname('vespa');
-//
-//        $bill = new Bill();
-//        $bill->setAmount(72.34);
-//        $bill->setBillTemplate($billTemplate);
-//        $bill->setCleared(null);
-//        $bill->setConfNumber(null);
-//        $bill->setDue(new \DateTime('8/01/2012'));
-//        $bill->setPaid(null);
-//        $bill->setScheduled(null);
-//
-//        $em = $this->getDoctrine()->getEntityManager();
-//        $em->persist($bill);
-////        $em->persist($billTemplate);
-//        $em->flush();
-//
-//        return $this->render('PiquageBillsBundle:Default:bills.html.twig', array(
-//                    'bill' => $bill,
-//                    'billTemplate' => $billTemplate,
-//                    'biller' => $billTemplate->getBiller()
-//                ));
-//    }
 
     /**
      * @Route("/", name="list_bills")
@@ -84,14 +55,14 @@ class BillsController extends Controller {
             $json = array();
             foreach($records as $r){
                 $json[] = array('id' => $r->getID(),
-                    'name' => $r->getBillTemplate()->getNickname(),
+//                    'name' => $r->getBillTemplate()->getNickname(),
                     'due' => $r->getDue()->format('Y-m-d')
                         );
             }
-            
+        
         }
 
-        
+   
         
         return $this->render('PiquageBillsBundle:Bill:index.html.twig', array('records' => $records));
     }
@@ -103,22 +74,49 @@ class BillsController extends Controller {
     public function gridRequestAction() {
         
         $records = $this->getDoctrine()->getRepository('PiquageBillsBundle:Bill')->findAllFilterByType('current');
-        
+
         $json = array();
         foreach ($records as $r) {
-            $json[] = array('id' => $r->getID(),
-                'name' => $r->getBillTemplate()->getNickname(),
-                'due' => $r->getDue()->format('Y-m-d')
+            $due = $r->getDue();
+            $scheduled = $r->getScheduled();
+            $paid = $r->getPaid();
+            $cleared = $r->getCleared();
+            $created = $r->getCreated();
+            $updated = $r->getUpdated();
+            
+            
+            $due = isset($due) ? $due->format('Y-m-d H:i:s') : "";
+            $scheduled = isset($scheduled) ? $scheduled->format('Y-m-d H:i:s') : "";
+            $paid = isset($paid) ? $paid->format('Y-m-d H:i:s') : "";
+            $cleared = isset($cleared) ? $cleared->format('Y-m-d H:i:s') : "";
+            $created = isset($created) ? $created->format('Y-m-d H:i:s') : "";
+            $updated = isset($updated) ? $updated->format('Y-m-d H:i:s') : "";
+
+            
+            
+            $json[] = array(
+                'id'        => $r->getID(),
+                'name'      => $r->getBillTemplate()->getNickname(),
+                'amount'    => $r->getAmount(),
+                'conf'      => $r->getConfNumber(),
+                'due'       => $due,
+                'scheduled' => $scheduled,
+                'paid'      => $paid,
+                'cleared'   => $cleared,
+                'created'   => $created,
+                'updated'   => $updated,
             );
         }
-          $headers = array(
-        'Content-Type' => 'application/json'
-  );
 
-  $response = new Response(json_encode($json), 200, $headers);
-  return $response;
 
-//        echo json_encode($json);
+        $headers = array(
+            'Content-Type' => 'application/json; charset=UTF-8'
+        );
+
+        $response = new Response(json_encode($json), 200, $headers);
+       
+        
+        return $response;
     }
     
     /**
@@ -190,18 +188,7 @@ class BillsController extends Controller {
         foreach($activeBillTemplates as $ab){
             $this->getDoctrine()->getRepository('PiquageBillsBundle:Bill')->insertNext($ab);
         }
-        
-//        $currentBillTemplates = array();
-//
-//        foreach ($currentBill as $c) {
-//            $currentBillTemplates[] = $c->getBillTemplate();
-//        }
-//
-//        $toCreate = array_diff($activeBillTemplates, $currentBillTemplates);
-//
-//        foreach ($toCreate as $tc) {
-//            $this->getDoctrine()->getRepository('PiquageBillsBundle:Bill')->insertNext($tc);
-//        }
+
     }
 
     
