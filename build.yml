@@ -1,0 +1,46 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    distro: debian
+    distro_name: stretch
+    project_title: home-economics
+    python_major_minor_version: 3.7
+    python_patch_version: 1
+    python_version: "{{ python_major_minor_version }}.{{ python_patch_version }}"
+
+  roles:
+    - alt-python
+
+  tasks:
+  - hostname:
+      name: "{{ project_title }}-on-{{ distro }}-{{ distro_name }}"
+
+  - name: Add mongo's apt key by id from a keyserver
+    apt_key:
+      keyserver: hkp://keyserver.ubuntu.com:80
+      id: 9DA31620334BD75D9DCB49F368818C72E52529D4
+
+  # Add specified repository into sources list using specified filename.
+  - apt_repository:
+      repo: deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main
+      state: present
+      filename: mongodb-org-4.0.list
+
+  - apt:
+      update_cache: yes
+      upgrade: yes
+
+  - apt:
+      name: "{{ apt_packages}}"
+    vars:
+      apt_packages:
+        - tree
+        - htop
+        - sysstat
+        - python3-pip # unless we have installed our own python
+        - mongodb-org
+
+  - pip:
+      name: pymongo
+      executable: pip{{ python_major_minor_version }}

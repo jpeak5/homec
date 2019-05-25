@@ -1,0 +1,3 @@
+[submodule "roles/alt-python"]
+	path = roles/alt-python
+	url = https://github.com/jpeak5/ansible-role-altpython
