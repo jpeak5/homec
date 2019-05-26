@@ -1,0 +1,11 @@
+<!doctype html>
+<title>Posts from Flask</title>
+<body>
+  <h1>this is as list of {{ ct }} posts</h1>
+<ul>
+  <p>found {{ posts.retrieved }} items</p>
+{% for post in posts %}
+  <li>{{ post['author'] }}</li>
+{% endfor %}
+</ul>
+</body>
