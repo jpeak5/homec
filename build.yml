@@ -42,8 +42,12 @@
         - mongodb-org
 
   - pip:
-      name: pymongo
+      name: "{{ pip_packages }}"
       executable: pip{{ python_major_minor_version }}
+    vars:
+      pip_packages:
+        - flask-pymongo
+        - pymongo
 
   - service:
       name: mongod

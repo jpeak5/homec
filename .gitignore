@@ -1,3 +1,4 @@
 .vagrant/
 .ftpconfig
 *.retry
+__pycache__/
